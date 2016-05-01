@@ -1,13 +1,23 @@
 <!doctype html>
-<title>Upload new File</title>
-<h1>Upload new File</h1>
-{% if error %}
-    <p class=error><strong>Error:</strong> {{ error }}
-{% endif %}
+<head>
+  <title>Upload new File</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='upStyle.css') }}">
+</head>
+<div id = "top">
+  <h1> <a href="/"> Python Uploader </a> </h1>
+  <h3> <a href="/images"> Images</a> | <a href="/documents"> Documents </a> | <a href="/upload"> Upload a file </a> </h3>
+</div>
+<div id="main">
+<div id="body">
+<h1>Upload a file</h1>
 <form action="" method=post enctype=multipart/form-data>
-  <p> File Name: <input type=text name=name> <br><br>
-    <input type=file name=file>
+  <p> File Name: <input type=text name=name> &nbsp &nbsp
+    <input id="file" type=file name=file>
     <input type=submit value=Upload>
   </p>
 </form>
-<a href="/"> Go Back to Homepage </a>
+</div>
+{% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+{% endif %}
+</div>
