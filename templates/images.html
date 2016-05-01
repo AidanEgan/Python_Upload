@@ -10,13 +10,11 @@
   <div id="main">
    {% for row in rows %}
       <a href="{{ url_for('static', filename='images/'+ row["FileName"]) }}">
-        <div id=image>
-          <img src="{{ url_for('static', filename='images/'+ row["FileName"]) }}" height=87.5px></img>
-        </div>
       <div id="rows">
-         <span id="rowName"> {{row["name"]}} </span>
-         <br>
-         [ <span id="fileName"> {{ row["FileName"] }} </span> ]
+        <div id=image>
+          <img src="{{ url_for('static', filename='images/'+ row["FileName"]) }}"></img>
+        </div>
+         <p><div id="rowName"> {{row["name"]}}  [ {{ row["FileName"] }} ] </div>
       </div>
       </a>
    {% endfor %}
