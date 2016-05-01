@@ -1,24 +1,21 @@
 <head>
-
+<title> View Documents </title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fileStyle.css') }}">
 </head>
 <body>
-<table border = 1>
-   <thead>
-      <td>Id</td>
-      <td>Name</td>
-      <td>FileName</td>
-   </thead>
-
+  <div id = "top">
+    <h1> <a href="/"> Python Uploader </a> </h1>
+    <h3> <a href="/images"> Images</a> | <a href="/documents"> Documents </a> | <a href="/upload"> Upload a file </a> </h3>
+  </div>
+  <div id="main">
    {% for row in rows %}
-      <tr>
-         <td>{{loop.index}}</td>
-         <td>{{row["name"]}}</td>
-         <td>
-           <a href="{{ url_for('static', filename='documents/'+ row["FileName"]) }}">{{ row["FileName"] }}</a>
-         </td>
-      </tr>
+      <a href="{{ url_for('static', filename='documents/'+ row["FileName"]) }}">
+      <div id="rows">
+         <span id="rowName"> {{row["name"]}} </span>
+         <br>
+         [ <span id="fileName"> {{ row["FileName"] }} </span> ]
+      </div>
+      </a>
    {% endfor %}
-</table>
-
-<a href = "/">Go back to home page</a>
+  </div>
 </body>
