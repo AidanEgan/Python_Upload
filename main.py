@@ -34,7 +34,7 @@ def fileRename(fname, folder, name):
     ext = fname.rsplit('.', 1)[1]
     for x in folder:
         if fname == x:
-            fname = name + '.' + ext
+            fname = secure_filename(name + '.' + ext)
             for x in folder:
                 if fname == x:
                     #Start original function
@@ -70,8 +70,20 @@ def addToDb(fname, name, database):
 
     return result
 
+def syncFileDb(table):
+    toSearch = []
+    with sqlite3.connect("database.db") as con:
+        cur = con.cursor()
+        cur.execute("SELECT FileName FROM " + table)
+        toSearch = cur.fetchall()
+        for x in toSearch:
+            if not os.path.exists("./static/" + table + "/" + x[0]):
+                cur.execute("DELETE FROM " + table + " WHERE FileName = " + '"%s"' % x[0])
+
 @app.route('/')
 def index():
+    syncFileDb("images")
+    syncFileDb("documents")
     return render_template('index.html')
 
 @app.route('/images')
@@ -91,7 +103,7 @@ def documents():
     con.row_factory = sqlite3.Row
 
     cur = con.cursor()
-    cur.execute("select * from documents order by rowid asc")
+    cur.execute("select * from documents order by rowid desc")
 
     rows = cur.fetchall();
     return render_template("documents.html",rows = rows)
