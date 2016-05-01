@@ -11,9 +11,7 @@
    {% for row in rows %}
       <a href="{{ url_for('static', filename='documents/'+ row["FileName"]) }}">
       <div id="rows">
-         <span id="rowName"> {{row["name"]}} </span>
-         <br>
-         [ <span id="fileName"> {{ row["FileName"] }} </span> ]
+        <p><div id="rowName"> {{row["name"]}} [ {{ row["FileName"] }} ] </div>
       </div>
       </a>
    {% endfor %}
