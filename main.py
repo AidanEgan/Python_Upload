@@ -46,8 +46,6 @@ def fileRename(fname, folder, name):
                                 regx = regx + 1
                                 if regx > number:
                                     number = regx
-                            else:
-                                fname = main + "(0)" + '.' + ext
                     fname = main + "(%i)" % number + '.' + ext
                     break
             break
@@ -62,7 +60,7 @@ def addToDb(fname, name, database):
             cur.execute("INSERT INTO " + database + " (FileName, name) VALUES (?,?)",(FileName, name) )
             con.commit()
             result = "Success!"
-            return error
+            return result
 
     except:
         with sqlite3.connect("database.db") as con:
@@ -125,7 +123,7 @@ def upload():
         else:
             error = "Please Fill In All of the Required Info"
     with sqlite3.connect("database.db") as con:
-        return render_template('upload.html', error=error, imupfol=imupfol)
+        return render_template('upload.html', error=error)
         con.close()
 
 if __name__ == "__main__":
