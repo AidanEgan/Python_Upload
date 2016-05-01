@@ -13,7 +13,7 @@ if not os.path.exists("database.db"):
     conn.execute('CREATE TABLE documents (FileName TEXT, name TEXT)')
     conn.close()
 
-UPLOAD_FOLDER = '/home/aidan/Documents/web/python/flask/flaskUpload/static'
+UPLOAD_FOLDER = './static'
 IMAGE_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 DOCUMENT_EXTENSIONS = set(['txt', 'pdf'])
 
