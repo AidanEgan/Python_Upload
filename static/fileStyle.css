@@ -1,0 +1,31 @@
+#top{
+  text-align: center;
+  color: green;
+}
+#top a {
+  text-decoration: none;
+  color: green;
+}
+#top a:visited {
+    color: green;
+}
+#main {
+  padding: 20px;
+}
+#rows {
+  margin-top: 10px;
+  color: black;
+  background-color: #9EBD9A;
+  padding: 30px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: green;
+}
+#main a{
+  text-decoration: none;
+}
+#image{
+  margin-top: 10px;
+  float: right;
+  padding: 10px;
+}
