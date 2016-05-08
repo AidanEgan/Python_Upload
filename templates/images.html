@@ -8,6 +8,16 @@
     <h3> <a href="/images"> Images</a> | <a href="/documents"> Documents </a> | <a href="/upload"> Upload a file </a> </h3>
   </div>
   <div id="main">
+    <div id=options>
+      <form action="" method=post enctype=multipart/form-data>
+        Order by: &nbsp
+        <select name="order">
+          <option value = "desc" {% if order == "desc" %} selected {%endif%}>Newest</option>
+          <option value = "asc" {% if order == "asc" %} selected {%endif%}>Oldest</option>
+        </select>
+        <input type="submit">
+      </form>
+    </div>
    {% for row in rows %}
       <a href="{{ url_for('static', filename='images/'+ row["FileName"]) }}">
       <div id="rows">
