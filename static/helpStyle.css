@@ -1,0 +1,11 @@
+#top{
+  text-align: center;
+  color: green;
+}
+#top a, #top a:visited {
+  text-decoration: none;
+  color: green;
+}
+#main {
+  text-align:center;
+}
