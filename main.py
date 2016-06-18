@@ -98,6 +98,10 @@ def index():
     #This tells it where the relevant html file is
     return render_template('index.html')
 
+@app.route('/help')
+def help():
+    return render_template('help.html')
+
 #This is the python code for the page that shows all uploaded images
 @app.route('/images',methods=['GET', 'POST'])
 def images():
