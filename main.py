@@ -11,8 +11,8 @@ if not os.path.exists("database.db"):
     conn = sqlite3.connect('database.db')
     #Create the two tables needed for the project
     #"DROP TABLE" will get rid of a table, "CREATE TABLE" will make one
-    conn.execute('CREATE TABLE images (FileName TEXT, name TEXT)')
-    conn.execute('CREATE TABLE documents (FileName TEXT, name TEXT)')
+    conn.execute('CREATE TABLE images (FileName TEXT, name TEXT, cat TEXT)')
+    conn.execute('CREATE TABLE documents (FileName TEXT, name TEXT, cat TEXT)')
     conn.close()
 
 #List the allowed extensions, and tell where the files will be uploaded
@@ -67,13 +67,14 @@ def fileRename(fname, folder, name):
     return fname
 
 #This adds a file to the database once it has been uploaded
-def addToDb(fname, name, database):
+def addToDb(fname, name, category, database):
     try:
         FileName = fname
         name = name
+        cat = category.lower()
         with sqlite3.connect("database.db") as con:
             cur = con.cursor()
-            cur.execute("INSERT INTO " + database + " (FileName, name) VALUES (?,?)",(FileName, name) )
+            cur.execute("INSERT INTO " + database + " (FileName, name,cat) VALUES (?,?,?)",(FileName, name,cat) )
             con.commit()
 
     except:
@@ -90,6 +91,17 @@ def syncFileDb(table):
             if not os.path.exists("./static/" + table + "/" + x[0]):
                 cur.execute("DELETE FROM " + table + " WHERE FileName = " + '"%s"' % x[0])
 
+def findCats(table):
+    cats = []
+    with sqlite3.connect("database.db") as con:
+        cur = con.cursor()
+        cur.execute("SELECT cat FROM " + table)
+        for x in cur.fetchall():
+            if x[0].lower() not in cats:
+                cats.append(x[0])
+    return cats
+
+
 #This tells the program what to do when someone connects to the site's main page
 @app.route('/')
 def index():
@@ -105,6 +117,7 @@ def help():
 #This is the python code for the page that shows all uploaded images
 @app.route('/images',methods=['GET', 'POST'])
 def images():
+    findCats("images")
     order = ""
     con = sqlite3.connect("database.db")
     con.row_factory = sqlite3.Row
@@ -112,15 +125,20 @@ def images():
     cur.execute("select * from images order by rowid desc")
     if request.method == 'POST':
         order = request.form['order']
-        if len(order) < 5:
+        if order == 'asc' or order == 'desc':
             cur.execute("select * from images order by rowid " + order)
+        else:
+            cur.execute("select * from images WHERE cat = " + '"' + order + '"')
     rows = cur.fetchall()
-    return render_template("images.html",rows = rows, order=order)
+    cats = findCats("images")
+
+    return render_template("images.html",rows = rows, order=order, cats=cats)
 
 
 #This is the python code for the page that shows all uploaded documents
 @app.route('/documents',methods=['GET', 'POST'])
 def documents():
+    print(findCats("documents"))
     order = ""
     con = sqlite3.connect("database.db")
     con.row_factory = sqlite3.Row
@@ -128,10 +146,13 @@ def documents():
     cur.execute("select * from documents order by rowid desc")
     if request.method == 'POST':
         order = request.form['order']
-        if len(order) < 5:
+        if order == 'asc' or order == 'desc':
             cur.execute("select * from documents order by rowid " + order)
+        else:
+            cur.execute("select * from documents WHERE cat = " + '"' + order + '"')
     rows = cur.fetchall()
-    return render_template("documents.html",rows = rows, order=order)
+    cats = findCats("documents")
+    return render_template("documents.html",rows = rows, order=order, cats=cats)
 
 #This is the python code for the page that lets one upload a file to the server
 @app.route('/upload', methods=['GET', 'POST'])
@@ -145,17 +166,18 @@ def upload():
         file = request.files['file']
         #The name of the file being uploaded (to be used later)
         name = request.form['name']
+        category = request.form['category']
         #This makes sure is's a legit file and it has a name
-        if file and name !="":
+        if file and name !="" and category !="":
             # This checks to see if the uploaded file was an image
             if check_file(file.filename) == "image":
                 filename = fileRename(secure_filename(file.filename), imupfol, name)
-                addToDb(filename, name, "images")
+                addToDb(filename, name, category, "images")
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], "images", filename))
             # This checks to see if the uploaded file was a document
             elif check_file(file.filename) == "document":
                 filename = fileRename(secure_filename(file.filename), docupfol, name)
-                addToDb(filename, name, "documents")
+                addToDb(filename, name, category, "documents")
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], "documents", filename))
             else:
                 #This error is thrown if for whatever reason it is neither an image nor a document
@@ -170,4 +192,4 @@ def upload():
 
 #This is the part that tells the server to start, and tells what port and ip to use
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=5000)
