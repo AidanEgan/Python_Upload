@@ -3,7 +3,6 @@ import os
 import re
 from flask import Flask, request, url_for, render_template
 from werkzeug import secure_filename
-from os import listdir
 import sqlite3
 
 #Create the database if it is not already created
@@ -159,8 +158,8 @@ def documents():
 def upload():
     error = None
     #This tells where the 'images' and 'documents' folders are located
-    imupfol = listdir(app.config['UPLOAD_FOLDER'] + '/images/')
-    docupfol = listdir(app.config['UPLOAD_FOLDER'] + '/documents/')
+    imupfol = os.listdir(app.config['UPLOAD_FOLDER'] + '/images/')
+    docupfol = os.listdir(app.config['UPLOAD_FOLDER'] + '/documents/')
     if request.method == 'POST':
         # The File That is Being Uploaded
         file = request.files['file']
