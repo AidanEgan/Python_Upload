@@ -1,3 +1,3 @@
 #!/bin/bash
-git fetch https://github.com/TheSolderKing/Python_Upload
+git fetch https://github.com/AidanEgan/Python_Upload
 git merge origin/master

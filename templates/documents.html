@@ -14,6 +14,9 @@
         <select name="order">
           <option value = "desc" {% if order == "desc" %} selected {%endif%}>Newest</option>
           <option value = "asc" {% if order == "asc" %} selected {%endif%}>Oldest</option>
+          {% for thingy in cats %}
+            <option value = {{thingy}} {% if order == thingy %} selected {%endif%}> {{thingy}} </option>
+          {% endfor %}
         </select>
         <input type="submit">
       </form>
@@ -21,7 +24,7 @@
    {% for row in rows %}
       <a href="{{ url_for('static', filename='documents/'+ row["FileName"]) }}">
       <div id="rows">
-        <p><div id="rowName"> {{row["name"]}} [ {{ row["FileName"] }} ] </div>
+        <p><div id="rowName"> {{row["name"]}} [ {{ row["FileName"] }} ] [{{row["cat"]}}] </div>
       </div>
       </a>
    {% endfor %}
